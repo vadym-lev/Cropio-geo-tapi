@@ -1,0 +1,27 @@
+networks:
+  mynetwork:
+    driver: bridge
+
+services:
+  db:
+    networks:
+      - mynetwork
+    image: postgis/postgis:13-3.1
+    environment:
+      POSTGRES_DB: geoapi_db
+      POSTGRES_USER: geoapi_user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  web:
+    networks:
+      - mynetwork
+    build: .
+    command: gunicorn geoapi.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
