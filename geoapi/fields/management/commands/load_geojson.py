@@ -7,10 +7,18 @@ import json
 class Command(BaseCommand):
     help = 'Load GeoJSON data into the Field model'
 
-    def handle(self, *args, **kwargs):
+    def add_arguments(self, parser):
+        parser.add_argument(
+            'filename',
+            type=str,
+            help='Path to the GeoJSON file to be loaded'
+        )
+
+    def handle(self, *args, **options):
+        filename = options['filename']
         fields_to_create = []
 
-        with open('data/fr-subset.geojsons') as f:
+        with open(filename, 'r') as f:
             for line in f:
                 data = json.loads(line)
 
@@ -32,7 +40,7 @@ class Command(BaseCommand):
         if fields_to_create:
             Field.objects.bulk_create(fields_to_create)
 
-        self.stdout.write(self.style.SUCCESS('Successfully loaded GeoJSON data'))
+        self.stdout.write(self.style.SUCCESS(f'Successfully loaded GeoJSON data from {filename}'))
 
     def convert_geometry(self, geometry):
         if geometry['type'] == 'Polygon':
@@ -40,4 +48,3 @@ class Command(BaseCommand):
         elif geometry['type'] == 'MultiPolygon':
             polygons = [Polygon(*coords) for coords in geometry['coordinates']]
             return MultiPolygon(polygons)
-

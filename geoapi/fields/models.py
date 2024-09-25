@@ -17,6 +17,12 @@ class Field(gis_models.Model):
     def __str__(self):
         return f"Field {self.id} - Region {self.region}"
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['geometry']),
+            models.Index(fields=['crop']),
+        ]
+
 # Signal to automatically convert Polygon to MultiPolygon
 @receiver(pre_save, sender=Field)
 def convert_polygon_to_multipolygon(sender, instance, **kwargs):
