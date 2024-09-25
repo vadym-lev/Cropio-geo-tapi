@@ -18,7 +18,9 @@ services:
     networks:
       - mynetwork
     build: .
-    command: gunicorn geoapi.wsgi:application --bind 0.0.0.0:8000
+    command: >
+      bash -c "python manage.py collectstatic --noinput &&
+               gunicorn geoapi.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:

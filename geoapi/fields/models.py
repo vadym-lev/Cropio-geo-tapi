@@ -5,13 +5,14 @@ from django.dispatch import receiver
 from django.contrib.gis.geos import Polygon, MultiPolygon
 
 class Field(gis_models.Model):
-    id = models.BigAutoField(primary_key=True)
-    crop = models.CharField(max_length=255, null=True, blank=True)
+    id = models.AutoField(primary_key=True)
+    crop = models.CharField(max_length=100, null=True, blank=True)
     productivity = models.FloatField(null=True, blank=True)
     area_ha = models.FloatField()
-    region = models.CharField(null=True, max_length=50)
+    region = models.CharField(max_length=10, null=True)  # ISO 3166-2 code of region
+    history = models.JSONField(null=True, blank=True)
     score = models.FloatField(null=True, blank=True)
-    geometry = gis_models.MultiPolygonField()
+    geometry = gis_models.MultiPolygonField(srid=4326)
 
     def __str__(self):
         return f"Field {self.id} - Region {self.region}"

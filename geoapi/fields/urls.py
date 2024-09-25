@@ -1,9 +1,10 @@
-from django.urls import path
-from .views import NearbyFieldsView, InsideParallelogramView, IntersectingFieldsView
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import FieldViewSet
+
+router = DefaultRouter()
+router.register(r'fields', FieldViewSet, basename='field')
 
 urlpatterns = [
-    path('nearby/', NearbyFieldsView.as_view(), name='nearby-fields'),
-    path('inside/', InsideParallelogramView.as_view(), name='inside-parallelogram'),
-    path('intersect/', IntersectingFieldsView.as_view(), name='intersecting-fields'),
+    path('', include(router.urls)),
 ]
-
