@@ -40,6 +40,12 @@ This project uses Django, Django REST Framework, and PostGIS to manage and provi
 6. **Create a Superuser:**
    To access the Django admin panel, create a superuser account:
    ```bash
+   docker-compose exec web python manage.py createsuperuser
+   ```
+
+7. **Load Initial Data:**
+   You can load initial data into the database. For example:
+   ```bash
    docker-compose exec web python manage.py load_geojson data/fr-subset.geojsons
    ```
 
